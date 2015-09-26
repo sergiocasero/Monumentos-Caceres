@@ -1,0 +1,32 @@
+{
+  "name": "Monumentos de caceres",
+  "version": "0.0.1",
+  "authors": [
+    "Sergio Casero Hernández <sergio.casero23@gmail.com>"
+  ],
+  "description": "Monumentos que encontramos en caceres",
+  "main": "index.html",
+  "keywords": [
+    "caceres",
+    "monumentos"
+  ],
+  "license": "MIT",
+  "homepage": "index.hml",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "google-map": "GoogleWebComponents/google-map#~1.1.1",
+    "iron-ajax": "PolymerElements/iron-ajax#~1.0.4",
+    "neon-animation": "polymerelements/neon-animation#~1.0.6",
+    "paper-header-panel": "PolymerElements/paper-header-panel#~1.0.5",
+    "paper-item": "PolymerElements/paper-item#~1.0.3",
+    "paper-tabs": "PolymerElements/paper-tabs#~1.0.3",
+    "paper-toolbar": "PolymerElements/paper-toolbar#~1.0.4",
+    "polymer": "Polymer/polymer#^1.1.0"
+  }
+}

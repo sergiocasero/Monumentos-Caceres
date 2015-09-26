@@ -1,0 +1,68 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-header-panel/paper-header-panel.html">
+<link rel="import" href="../paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../paper-tabs/paper-tabs.html">
+<link rel="import" href="../paper-tabs/paper-tab.html">
+<link rel="import" href="../neon-animation/neon-animated-pages.html">
+<link rel="import" href="../google-map/google-map.html">
+<link rel="import" href="../iron-ajax/iron-ajax.html">
+<link rel="import" href="../monument-list/monument-list.html">
+
+<dom-module id="monumentos-app">
+    <style>
+        :host{
+            
+        }
+        paper-tabs{
+            width: 100%;
+        }
+    </style>
+    <template>
+        <paper-header-panel class="flex">
+            <paper-toolbar class="medium-tall">
+                <span>Monumentos de Cáceres</span>
+                <paper-tabs selected="{{selected}}" class="bottom self-end" id="tabs">
+                    <paper-tab>Mapa</paper-tab>
+                    <paper-tab>Listado</paper-tab>
+                </paper-tabs>
+            </paper-toolbar>
+            
+            <neon-animated-pages id="pages" selected="{{selected}}">
+                <google-map id="map" latitude="39.4716366" longitude="-6.3907192" zoom="13">
+                    <template is="dom-repeat" items="{{monumentos}}">
+                        <google-map-marker on-google-map-marker-click="markerClicked"
+                                           latitude="{{item.geo_lat.value}}" 
+                                           longitude="{{item.geo_long.value}}" 
+                                           title="{{item.rdfs_label.value}}"></google-map-marker>
+                    </template>
+                </google-map>
+                <monument-list id="list"></monument-list>
+            </neon-animated-pages>
+        </paper-header-panel>
+        <iron-ajax
+                   auto
+                   handle-as="json"
+                   url="http://opendata.caceres.es/toJSON/JSON?uri=http://opendata.caceres.es/sparql?default-graph-uri=&query=select+%3FURI+%3Frdfs_label+%3Fom_tieneEnlaceSIG+%3Fschema_url+%3Fom_tieneEnlaceTurismo+%3Fgeo_lat+%3Fgeo_long+%3Fowl_sameAs+%3Fowl_sameAs_Caceres+%0D%0Awhere{%0D%0A%3FURI+a+om%3AMonumento.%0D%0AOPTIONAL+{%3FURI+rdfs%3Alabel+%3Frdfs_label.}.%0D%0AOPTIONAL+{%3FURI+om%3AtieneEnlaceSIG+%3Fom_tieneEnlaceSIG.}.%0D%0AOPTIONAL+{%3FURI+schema%3Aurl+%3Fschema_url.}.%0D%0AOPTIONAL+{%3FURI+om%3AtieneEnlaceTurismo+%3Fom_tieneEnlaceTurismo}.%0D%0AOPTIONAL+{%3FURI+geo%3Alat+%3Fgeo_lat.}.%0D%0AOPTIONAL+{%3FURI+geo%3Along+%3Fgeo_long.}.%0D%0AOPTIONAL+{%3FURI+owl%3AsameAs+%3Fowl_sameAs.%0D%0AFILTER+%28!REGEX+%28%3Fowl_sameAs%2C+%22opendata%22%2C%22i%22%29%29+.}%0D%0AOPTIONAL+{%3FURI+owl%3AsameAs+%3Fowl_sameAs_Caceres.%0D%0AFILTER+%28REGEX+%28%3Fowl_sameAs_Caceres%2C+%22opendata%22%2C%22i%22%29%29+.}}&format=json"
+                   on-response="handleResponse"
+                   ></iron-ajax>
+    </template>
+</dom-module>
+<script>
+    Polymer({
+        is: "monumentos-app",
+        properties:{
+            monumentos: {
+                type: Array,
+                value: new Array()
+            }
+        },
+        ready: function(){
+            this.$.tabs.selected = 0;
+            this.$.map.style.height = (window.innerHeight - 110) + "px";
+        },
+        handleResponse: function(event){
+            this.monumentos = event.detail.response.results.bindings;
+            this.$.list.monumentos = this.monumentos;
+        }
+    });
+</script>
